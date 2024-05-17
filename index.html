@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Card</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0.3rem;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+        }
+        .input-container {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.1rem;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: calc(100% - 2rem); /* Adjust for padding */
+            padding: 0.1rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+            border: 0.1rem solid #ccc;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        #qrcode {
+            height: 100vh;
+        }
+        /* Adjust input size on non-mobile viewports */
+        @media screen and (min-width: 600px) {
+            input[type="text"] {
+                max-width: 20rem;
+            }
+            #qrcode {
+                margin: auto;
+                max-width: 20rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <h1>QR Card</h1>
+    <div class="input-container">
+        <label for="iban">IBAN:</label>
+        <input type="text" id="iban" placeholder="Zadejte IBAN (CZ+16 čísel)">
+    </div>
+    <div class="input-container">
+        <label for="amount">Částka:</label>
+        <input type="text" id="amount" placeholder="Zadejte částku v CZK">
+    </div>
+    <div id="qrcode"></div>
+
+    <script>
+        // Function to generate QR code
+        function generateQR() {
+            const iban = document.getElementById('iban').value.trim().replace(/\s/g, '');
+            const amount = document.getElementById('amount').value;
+            //get date in format YYYYMMDD
+            const ymdDate = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            const value = `SPD*1.0*ACC:${iban}*CC:CZK*DT:${ymdDate}*AM:${amount}`;
+            console.log(value);
+
+            // Clear previous QR code
+            document.getElementById('qrcode').innerHTML = '';
+
+            // Generate QR code
+            const qr = qrcode(0, 'M');
+            qr.addData(value);
+            qr.make();
+
+            // Append QR code to the container
+            const qrCanvas = qr.createSvgTag({scalable: true, cellSize:1, margin: 1});
+            document.getElementById('qrcode').innerHTML = qrCanvas;
+        }
+
+        // Call generateQR function initially and whenever inputs change
+        document.getElementById('iban').addEventListener('input', generateQR);
+        document.getElementById('amount').addEventListener('input', generateQR);
+
+        // Initial QR code generation
+        generateQR();
+    </script>
+</body>
+</html>
