@@ -62,6 +62,13 @@
     <div id="qrcode"></div>
 
     <script>
+        // Read the query string
+        const urlParams = new URLSearchParams(window.location.search);
+        const iban = urlParams.get('iban');
+        if (iban) {
+            document.getElementById('iban').value = iban;
+        }
+
         // Function to generate QR code
         function generateQR() {
             const iban = document.getElementById('iban').value.trim().replace(/\s/g, '');
@@ -82,6 +89,9 @@
             // Append QR code to the container
             const qrCanvas = qr.createSvgTag({scalable: true, cellSize:1, margin: 1});
             document.getElementById('qrcode').innerHTML = qrCanvas;
+
+            // Add iban to the query string
+            history.pushState(null, '', `?iban=${iban}`);
         }
 
         // Call generateQR function initially and whenever inputs change
@@ -91,5 +101,6 @@
         // Initial QR code generation
         generateQR();
     </script>
+
 </body>
 </html>
