@@ -1,4 +1,4 @@
-# qr-card
+# QR Card
 
 [QR Card](https://cvakiitho.github.io/qr-card)
 
